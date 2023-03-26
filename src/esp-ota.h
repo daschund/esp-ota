@@ -16,11 +16,28 @@
     public:
       esp_ota_t();
       void enable(WebServerType *server);
+      void onStart(void (*fn)(void)) {
+        onStart_cb = fn;
+      }
+      void onEnd(void (*fn)(void)) {
+        onEnd_cb = fn;
+      }
+      void onError(void (*fn)(int code, const char* msg)) {
+        onError_cb = fn;
+      }
+      void beforeReboot(void (*fn)(void)) {
+        beforeReboot_cb = fn;
+      }
     private:
       WebServerType *webServer;
       #if defined(ESP8266)
-        ESP8266HTTPUpdateServer _httpUpdater;
+      ESP8266HTTPUpdateServer _httpUpdater;
       #endif
+      
+      void (*onStart_cb)(void);
+      void (*onEnd_cb)(void);
+      void (*onError_cb)(int code, const char* msg);
+      void (*beforeReboot_cb)(void);
   };
   extern esp_ota_t ESP_OTA;
 
