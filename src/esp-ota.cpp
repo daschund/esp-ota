@@ -20,6 +20,13 @@ void esp_ota_t::enable(WebServerType *server) {
     }
   );
 
+  webServer->on(F("/info"), HTTP_GET,
+    [&]() {
+      webServer->sendHeader(F("Connection"), F("close"));
+      webServer->send(200, F("text/html"), getInfo());
+    }
+  );    
+
   webServer->on(F(ESP_OTA_WEB_PATH), HTTP_POST,
     [&]() {
       webServer->sendHeader(F("Connection"), F("close"));
