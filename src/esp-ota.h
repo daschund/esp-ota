@@ -72,7 +72,7 @@ enum infoID {
       void beforeReboot(void (*fn)(void)) {
         beforeReboot_cb = fn;
       }
-      restart();
+      void restart();
     private:
       WebServerType *webServer;
       #if defined(ESP8266)
