@@ -25,7 +25,15 @@ void esp_ota_t::enable(WebServerType *server) {
       webServer->sendHeader(F("Connection"), F("close"));
       webServer->send(200, F("text/html"), getInfo());
     }
-  );    
+  );
+
+  webServer->on(F("/reboot"), HTTP_GET,
+    [&]() {
+      webServer->sendHeader(F("Connection"), F("close"));
+      webServer->send(200, F("text/html"), "");
+      restart();
+    }
+  );
 
   webServer->on(F(ESP_OTA_WEB_PATH), HTTP_POST,
     [&]() {
@@ -63,4 +71,13 @@ void esp_ota_t::enable(WebServerType *server) {
       }
     }
   );
+}
+
+void esp_ota_t::restart() {
+  delay(500);
+  yield();
+  delay(500);
+  yield();
+  delay(100);
+  ESP.restart();
 }
